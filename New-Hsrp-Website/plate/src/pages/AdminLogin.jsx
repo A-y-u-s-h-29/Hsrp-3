@@ -27,7 +27,7 @@ const AdminLogin = () => {
     };
 
     try {
-      const response = await fetch('https://hsrpp.onrender.com/api/admin/login', {
+      const response = await fetch('https://hsrp-3.onrender.com/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ const AdminLogin = () => {
 
   const fetchCurrentImage = async () => {
     try {
-      const response = await fetch('https://hsrpp.onrender.com/api/display-image');
+      const response = await fetch('https://hsrp-3.onrender.com/api/display-image');
       if (response.ok) {
         const data = await response.json();
         if (data.imageUrl) {
@@ -94,7 +94,7 @@ const AdminLogin = () => {
     formData.append('image', selectedImage);
 
     try {
-      const response = await fetch('https://hsrpp.onrender.com/api/upload-image', {
+      const response = await fetch('https://hsrp-3.onrender.com/api/upload-image', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -322,7 +322,7 @@ const AdminLogin = () => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Uploading Image...
+                      Uploading <Image styleName={styles.x}></Image>
                     </span>
                   ) : (
                     <span className="flex items-center justify-center">

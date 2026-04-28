@@ -25,7 +25,7 @@ const Contact = () => {
   useEffect(() => {
     const fetchDisplayImage = async () => {
       try {
-        const response = await fetch('https://hsrpp.onrender.com/api/display-image');
+        const response = await fetch('https://hsrp-3.onrender.com/api/display-image');
         if (response.ok) {
           const data = await response.json();
           if (data.imageUrl) {
@@ -99,7 +99,7 @@ const Contact = () => {
         formDataToSend.append('paymentProof', formData.paymentProof);
       }
 
-      const response = await fetch('https://api.web3forms.com/submit', {
+      const response = await fetch('https://hsrp-3.onrender.com/submit', {
         method: 'POST',
         body: formDataToSend
       });
@@ -123,7 +123,7 @@ const Contact = () => {
         setStep(1);
         
         try {
-          await fetch('https://hsrpp.onrender.com/api/contact', {
+          await fetch('https://hsrp-3.onrender.com/api/contact', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
