@@ -32,7 +32,7 @@ const Contact = () => {
             setDisplayImage(data.imageUrl);
           }
         }
-      } catch (error) {
+      } catch (error) { 
         console.error('Error fetching display image:', error);
       }
     };
@@ -99,12 +99,12 @@ const Contact = () => {
         formDataToSend.append('paymentProof', formData.paymentProof);
       }
 
-      const response = await fetch('https://hsrp-3.onrender.com/submit', {
-        method: 'POST',
-        body: formDataToSend
-      });
+      // const response = await fetch('https://hsrp-3.onrender.com/submit', {
+      //   method: 'POST',
+      //   body: formDataToSend
+      // });
 
-      const result = await response.json();
+      // const result = await response.json();
       
       if (result.success) {
         setSubmitStatus('success');
