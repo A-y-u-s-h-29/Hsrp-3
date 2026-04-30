@@ -8,7 +8,6 @@ const AdminLogin = () => {
   const [currentImage, setCurrentImage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
-  // Check if user is already logged in
   useEffect(() => {
     const savedToken = localStorage.getItem('adminToken');
     if (savedToken) {
@@ -29,9 +28,7 @@ const AdminLogin = () => {
     try {
       const response = await fetch('https://hsrp-3.onrender.com/api/admin/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
       });
       
@@ -71,7 +68,6 @@ const AdminLogin = () => {
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size (5MB limit)
       if (file.size > 5 * 1024 * 1024) {
         setUploadStatus('File size too large! Maximum 5MB allowed.');
         return;
@@ -96,9 +92,7 @@ const AdminLogin = () => {
     try {
       const response = await fetch('https://hsrp-3.onrender.com/api/upload-image', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        headers: { 'Authorization': `Bearer ${token}` },
         body: formData,
       });
 
@@ -107,8 +101,8 @@ const AdminLogin = () => {
         setUploadStatus('Image uploaded successfully!');
         setCurrentImage(data.imageUrl);
         setSelectedImage(null);
-        // Clear file input
-        document.getElementById('imageInput').value = '';
+        const inputEl = document.getElementById('imageInput');
+        if (inputEl) inputEl.value = '';
       } else {
         setUploadStatus(data.error || 'Upload failed!');
       }
@@ -269,7 +263,6 @@ const AdminLogin = () => {
               </h3>
 
               <div className="space-y-6">
-                {/* File Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">Select Image File</label>
                   <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition duration-200">
@@ -291,7 +284,6 @@ const AdminLogin = () => {
                   </div>
                 </div>
 
-                {/* Preview */}
                 {selectedImage && (
                   <div className="bg-white rounded-lg border border-gray-200 p-4">
                     <p className="text-sm font-medium text-gray-700 mb-3">Image Preview</p>
@@ -306,7 +298,6 @@ const AdminLogin = () => {
                   </div>
                 )}
 
-                {/* Upload Button */}
                 <button
                   onClick={handleImageUpload}
                   disabled={!selectedImage || isUploading}
@@ -322,7 +313,7 @@ const AdminLogin = () => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Uploading <Image styleName={styles.x}></Image>
+                      Uploading...
                     </span>
                   ) : (
                     <span className="flex items-center justify-center">
@@ -358,7 +349,7 @@ const AdminLogin = () => {
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                 )}
-                {uploadStatus.includes('error') && (
+                {!uploadStatus.includes('success') && !uploadStatus.includes('Uploading') && (
                   <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
