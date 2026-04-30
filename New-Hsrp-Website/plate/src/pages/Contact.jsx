@@ -74,86 +74,87 @@ const Contact = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
+  e.preventDefault();
+  setIsSubmitting(true);
+  setSubmitStatus(null);
 
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('access_key', 'b6869fb6-d05b-4476-bff0-14401ede6ebc');
-      formDataToSend.append('subject', 'New HSRP Plate Application with Payment');
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('phoneNo', formData.phone);
-      formDataToSend.append('address', formData.address);
-      formDataToSend.append('vehicleNumber', formData.vehicleNumber);
-      formDataToSend.append('chassisNo', formData.chassisNo);
-      formDataToSend.append('engineNo', formData.engineNo);
-      formDataToSend.append('state', formData.state);
-      formDataToSend.append('transactionId', formData.transactionId);
-      formDataToSend.append('selectedProduct', selectedProduct);
-      formDataToSend.append('from_name', 'HSRP Plate Website');
-      formDataToSend.append('botcheck', '');
+  try {
+    const formDataToSend = new FormData();
+    formDataToSend.append('access_key', 'b6869fb6-d05b-4476-bff0-14401ede6ebc');
+    formDataToSend.append('subject', 'New HSRP Plate Application with Payment');
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('email', formData.email);
+    formDataToSend.append('phoneNo', formData.phone);
+    formDataToSend.append('address', formData.address);
+    formDataToSend.append('vehicleNumber', formData.vehicleNumber);
+    formDataToSend.append('chassisNo', formData.chassisNo);
+    formDataToSend.append('engineNo', formData.engineNo);
+    formDataToSend.append('state', formData.state);
+    formDataToSend.append('transactionId', formData.transactionId);
+    formDataToSend.append('selectedProduct', selectedProduct);
+    formDataToSend.append('from_name', 'HSRP Plate Website');
+    formDataToSend.append('botcheck', '');
 
-      if (formData.paymentProof) {
-        formDataToSend.append('paymentProof', formData.paymentProof);
-      }
-
-      // const response = await fetch('https://hsrp-3.onrender.com/submit', {
-      //   method: 'POST',
-      //   body: formDataToSend
-      // });
-
-      // const result = await response.json();
-      
-      if (result.success) {
-        setSubmitStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          address: '',
-          vehicleNumber: '',
-          chassisNo: '',
-          engineNo: '',
-          state: '',
-          transactionId: '',
-          paymentProof: null
-        });
-        setStep(1);
-        
-        try {
-          await fetch('https://hsrp-3.onrender.com/api/contact', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: formData.name,
-              email: formData.email,
-              phoneNo: formData.phone,
-              address: formData.address,
-              vehicleNumber: formData.vehicleNumber,
-              chassisNo: formData.chassisNo,
-              engineNo: formData.engineNo,
-              state: formData.state,
-              transactionId: formData.transactionId,
-              selectedProduct: selectedProduct
-            })
-          });
-        } catch (backendError) {
-          console.log('Backend save failed, but form submitted to w3forms');
-        }
-      } else {
-        setSubmitStatus('error');
-      }
-    } catch (error) {
-      setSubmitStatus('error');
-      console.error('Form submission error:', error);
-    } finally {
-      setIsSubmitting(false);
+    if (formData.paymentProof) {
+      formDataToSend.append('paymentProof', formData.paymentProof);
     }
-  };
+
+    // UNCOMMENT THIS - It was commented out
+    const response = await fetch('https://hsrp-3.onrender.com/submit', {
+      method: 'POST',
+      body: formDataToSend
+    });
+
+    const result = await response.json();
+    
+    if (result.success) {
+      setSubmitStatus('success');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        vehicleNumber: '',
+        chassisNo: '',
+        engineNo: '',
+        state: '',
+        transactionId: '',
+        paymentProof: null
+      });
+      setStep(1);
+      
+      try {
+        await fetch('https://hsrp-3.onrender.com/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            phoneNo: formData.phone,
+            address: formData.address,
+            vehicleNumber: formData.vehicleNumber,
+            chassisNo: formData.chassisNo,
+            engineNo: formData.engineNo,
+            state: formData.state,
+            transactionId: formData.transactionId,
+            selectedProduct: selectedProduct
+          })
+        });
+      } catch (backendError) {
+        console.log('Backend save failed, but form submitted to w3forms');
+      }
+    } else {
+      setSubmitStatus('error');
+    }
+  } catch (error) {
+    setSubmitStatus('error');
+    console.error('Form submission error:', error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const formatVehicleNumber = (value) => {
     // Format: AB12CD3456 -> 2 letters, 2 digits, 1-2 letters, 4 digits
