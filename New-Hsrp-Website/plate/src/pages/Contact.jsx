@@ -21,7 +21,6 @@ const Contact = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState('Two-wheel Plate');
 
-  // Fetch QR image from your backend (which returns Cloudinary URL)
   useEffect(() => {
     const fetchDisplayImage = async () => {
       try {
@@ -63,59 +62,63 @@ const Contact = () => {
   const handlePrevStep = () => setStep(step - 1);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
-  setSubmitStatus(null);
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
 
-  try {
-    const payload = {
-      access_key: '70765f92-7551-4274-a8c3-11f038f72b4a',
-      subject: 'New HSRP Plate Application with Payment',
-      from_name: 'HSRP Plate Website',
-      botcheck: '',
-      name: formData.name,
-      email: formData.email,
-      phoneNo: formData.phone,
-      address: formData.address,
-      vehicleNumber: formData.vehicleNumber,
-      chassisNo: formData.chassisNo,
-      engineNo: formData.engineNo,
-      state: formData.state,
-      transactionId: formData.transactionId,
-      selectedProduct: selectedProduct,
-      paymentProof: formData.paymentProof ? formData.paymentProof.name : 'Not uploaded'
-    };
+    try {
+      const payload = {
+        access_key: '29573656-bd82-43f0-b2bb-4be336881554',
+        subject: 'New HSRP Plate Application with Payment',
+        from_name: 'HSRP Plate Website',
+        botcheck: '',
+        name: formData.name,
+        email: formData.email,
+        phoneNo: formData.phone,
+        address: formData.address,
+        vehicleNumber: formData.vehicleNumber,
+        chassisNo: formData.chassisNo,
+        engineNo: formData.engineNo,
+        state: formData.state,
+        transactionId: formData.transactionId,
+        selectedProduct: selectedProduct,
+        paymentProof: formData.paymentProof ? formData.paymentProof.name : 'Not uploaded'
+      };
 
-    const response = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      setSubmitStatus('success');
-      setFormData({
-        name: '', email: '', phone: '', address: '',
-        vehicleNumber: '', chassisNo: '', engineNo: '',
-        state: '', transactionId: '', paymentProof: null
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
       });
-      setStep(1);
-    } else {
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        // Reset form after 4 seconds so user sees the confirmation first
+        setTimeout(() => {
+          setFormData({
+            name: '', email: '', phone: '', address: '',
+            vehicleNumber: '', chassisNo: '', engineNo: '',
+            state: '', transactionId: '', paymentProof: null
+          });
+          setSubmitStatus(null);
+          setStep(1);
+        }, 4000);
+      } else {
+        setSubmitStatus('error');
+        console.error('Web3Forms error:', result);
+      }
+    } catch (error) {
       setSubmitStatus('error');
-      console.error('Web3Forms error:', result);
+      console.error('Form submission error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (error) {
-    setSubmitStatus('error');
-    console.error('Form submission error:', error);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   const formatVehicleNumber = (value) =>
     value.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 10);
@@ -363,7 +366,7 @@ const Contact = () => {
                       </svg>
                       <div>
                         <h3 className="font-semibold">Application Submitted!</h3>
-                        <p className="text-sm">Thank you! We'll contact you within 24 hours.</p>
+                        <p className="text-sm">Thank you! We'll contact you within 24 hours. Redirecting in 4 seconds...</p>
                       </div>
                     </div>
                   </div>
@@ -388,9 +391,9 @@ const Contact = () => {
                     className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                     Back
                   </button>
-                  <button type="submit" disabled={isSubmitting}
+                  <button type="submit" disabled={isSubmitting || submitStatus === 'success'}
                     className={`px-6 py-3 bg-blue-600 text-white font-medium rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                      isSubmitting ? 'opacity-75 cursor-not-allowed' : 'hover:bg-blue-700'
+                      isSubmitting || submitStatus === 'success' ? 'opacity-75 cursor-not-allowed' : 'hover:bg-blue-700'
                     }`}>
                     {isSubmitting ? (
                       <span className="flex items-center">
