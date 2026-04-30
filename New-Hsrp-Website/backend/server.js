@@ -11,7 +11,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['https://hsrp-3.vercel.app', 'http://localhost:5173'],
+  origin: ['https://www.hsrp.site', 'http://localhost:5173'],
   credentials: true
 }));
 app.use(express.json());
