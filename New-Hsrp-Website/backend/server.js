@@ -94,7 +94,7 @@ app.get('/api/health', (req, res) => {
 app.post('/api/admin/login', async (req, res) => {
   const { email, password } = req.body;
   
-  if (email === 'admin@example.com' && password === 'admin123') {
+  if (email === 'admin123@gmail.com' && password === 'admin445566') {
     const token = jwt.sign(
       { email: email },
       process.env.JWT_SECRET || 'fallback_secret',
