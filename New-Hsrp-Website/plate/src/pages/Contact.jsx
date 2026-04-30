@@ -63,56 +63,59 @@ const Contact = () => {
   const handlePrevStep = () => setStep(step - 1);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
+  e.preventDefault();
+  setIsSubmitting(true);
+  setSubmitStatus(null);
 
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('access_key', '70765f92-7551-4274-a8c3-11f038f72b4a');
-      formDataToSend.append('subject', 'New HSRP Plate Application with Payment');
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('phoneNo', formData.phone);
-      formDataToSend.append('address', formData.address);
-      formDataToSend.append('vehicleNumber', formData.vehicleNumber);
-      formDataToSend.append('chassisNo', formData.chassisNo);
-      formDataToSend.append('engineNo', formData.engineNo);
-      formDataToSend.append('state', formData.state);
-      formDataToSend.append('transactionId', formData.transactionId);
-      formDataToSend.append('selectedProduct', selectedProduct);
-      formDataToSend.append('from_name', 'HSRP Plate Website');
-      formDataToSend.append('botcheck', '');
+  try {
+    const payload = {
+      access_key: 'b6869fb6-d05b-4476-bff0-14401ede6ebc',
+      subject: 'New HSRP Plate Application with Payment',
+      from_name: 'HSRP Plate Website',
+      botcheck: '',
+      name: formData.name,
+      email: formData.email,
+      phoneNo: formData.phone,
+      address: formData.address,
+      vehicleNumber: formData.vehicleNumber,
+      chassisNo: formData.chassisNo,
+      engineNo: formData.engineNo,
+      state: formData.state,
+      transactionId: formData.transactionId,
+      selectedProduct: selectedProduct,
+      paymentProof: formData.paymentProof ? formData.paymentProof.name : 'Not uploaded'
+    };
 
-      if (formData.paymentProof) {
-        formDataToSend.append('paymentProof', formData.paymentProof);
-      }
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
 
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formDataToSend
+    const result = await response.json();
+
+    if (result.success) {
+      setSubmitStatus('success');
+      setFormData({
+        name: '', email: '', phone: '', address: '',
+        vehicleNumber: '', chassisNo: '', engineNo: '',
+        state: '', transactionId: '', paymentProof: null
       });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setSubmitStatus('success');
-        setFormData({
-          name: '', email: '', phone: '', address: '',
-          vehicleNumber: '', chassisNo: '', engineNo: '',
-          state: '', transactionId: '', paymentProof: null
-        });
-        setStep(1);
-      } else {
-        setSubmitStatus('error');
-      }
-    } catch (error) {
+      setStep(1);
+    } else {
       setSubmitStatus('error');
-      console.error('Form submission error:', error);
-    } finally {
-      setIsSubmitting(false);
+      console.error('Web3Forms error:', result);
     }
-  };
+  } catch (error) {
+    setSubmitStatus('error');
+    console.error('Form submission error:', error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const formatVehicleNumber = (value) =>
     value.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 10);
